@@ -1,0 +1,86 @@
+#!/bin/bash
+#sld - creates a standard linux development directory and a basic makefile with one include
+
+
+##################################
+
+Help()
+{
+   # Display Help
+   echo "creates a standard linux development directory and a basic makefile with one include"
+   echo
+   echo "Syntax: sld first second"
+   echo "options:"
+   echo "first     Project/binary target name"
+   echo "second     Include file"
+   
+   echo
+}
+
+##################################
+
+#used to display help function with -h flag
+while getopts ":h" option; do
+   case $option in
+      h) # display Help
+         Help
+         exit;;
+   esac
+done
+
+#script automatically exits if no arguments provided
+if [ $# -eq 0 ]; then
+    echo "No arguments provided"
+    exit 1
+fi
+
+#script automatically exits if no arguments provided
+if [ $# -eq 1 ]; then
+    echo "Only one argument provided"
+    exit 1
+fi
+
+
+echo Creating Directories for $1 Project with Include file $2
+
+NOW=$(date +"%d-%m-%Y")
+
+mkdir ./$1
+mkdir ./$1/bin
+mkdir ./$1/obj
+mkdir ./$1/inc
+mkdir ./$1/src
+
+touch ./$1/makefile
+
+echo "# File: makefile 
+# Date: $NOW (d/m/y)
+# Project: $1
+# Author: Joel Smith
+# Description: A makefile for $1
+#=======================================================
+#                  
+# =======================================================
+# FINAL BINARY Target
+./bin/$1 : ./obj/crypto.o ./obj/main.o
+	cc -o ./bin/$1 ./obj/$2.o ./obj/main.o
+#
+# =======================================================
+#                     Dependencies
+# =======================================================                     
+./obj/crypto.o : ./src/$2.c ./inc/$2.h
+	cc  -c ./src/$2.c -o ./obj/$2.o
+	
+./obj/main.o : ./src/main.c 
+	cc -c ./src/main.c -o ./obj/main.o
+
+#
+#
+#
+# =======================================================
+# Other targets
+# =======================================================                     
+#cleans the project and development directory structures
+clean:
+	rm -f ./bin/*
+	rm -f ./obj/*.o" > ./$1/makefile
