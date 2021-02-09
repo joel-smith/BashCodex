@@ -45,14 +45,73 @@ echo Creating Directories for $1 Project with Include file $2
 
 NOW=$(date +"%d-%m-%Y")
 
+#set up directory structures
+echo Creating Directories for $1 Project with Include file $2
 mkdir ./$1
 mkdir ./$1/bin
 mkdir ./$1/obj
 mkdir ./$1/inc
 mkdir ./$1/src
 
+#make relevant files
 touch ./$1/makefile
+touch ./$1/src/main.c
+touch ./$1/src/$2.c
+touch ./$1/inc/$2.h
 
+#write to main.c
+echo "
+/*
+* FILENAME: main.c
+* PROJECT: $1
+* BY: Joel Smith
+* DATE:  $NOW (d/m/y)
+* DESCRIPTION: main entry point for $1 project
+*/
+
+
+
+#include \"../inc/$2.h\"
+
+" >>./$1/src/main.c
+
+#write to include library .c
+echo "
+/*
+* FILENAME: $2.c
+* PROJECT: $1
+* BY: Joel Smith
+* DATE:  $NOW (d/m/y)
+* DESCRIPTION: contains implementation of $2 library in $1 project
+*/
+
+
+
+#include \"../inc/$2.h\"
+
+int main (void)
+{
+	return 0;
+}
+
+" >>./$1/src/$2.c
+
+#write to include library .h
+echo "
+/*
+* FILENAME: $2.h
+* PROJECT: $1
+* BY: Joel Smith
+* DATE:  $NOW (d/m/y)
+* DESCRIPTION: contains function headers for $2 library in $1 project
+*/
+
+
+#pragma once
+
+" >>./$1/inc/$2.h
+
+#create relevant makefile
 echo "# File: makefile 
 # Date: $NOW (d/m/y)
 # Project: $1
@@ -62,13 +121,13 @@ echo "# File: makefile
 #                  
 # =======================================================
 # FINAL BINARY Target
-./bin/$1 : ./obj/crypto.o ./obj/main.o
+./bin/$1 : ./obj/$2.o ./obj/main.o
 	cc -o ./bin/$1 ./obj/$2.o ./obj/main.o
 #
 # =======================================================
 #                     Dependencies
 # =======================================================                     
-./obj/crypto.o : ./src/$2.c ./inc/$2.h
+./obj/$2.o : ./src/$2.c ./inc/$2.h
 	cc  -c ./src/$2.c -o ./obj/$2.o
 	
 ./obj/main.o : ./src/main.c 
