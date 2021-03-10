@@ -1,0 +1,28 @@
+#!/bin/bash
+#keepempties - runs through 
+
+
+##################################
+
+Help()
+{
+   # Display Help
+   echo "loops through every sub-directory and puts an empty .gitkeep into each empty leaf"
+   
+   echo
+}
+
+##################################
+
+#used to display help function with -h flag
+while getopts ":h" option; do
+   case $option in
+      h) # display Help
+         Help
+         exit;;
+   esac
+done
+
+#https://unix.stackexchange.com/questions/463044/recursively-create-empty-file-in-empty-sub-directories
+find . -type d -empty -not -path "./.git/*" -exec touch {}/.gitkeep \;
+
