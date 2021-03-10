@@ -1,5 +1,5 @@
 #!/bin/bash
-#sld - creates a standard linux development directory and a basic makefile with one include
+#newdevdirs - creates a standard linux development directory and a basic makefile with one include
 
 
 ##################################
@@ -9,7 +9,7 @@ Help()
    # Display Help
    echo "creates a standard linux development directory and a basic makefile with one include"
    echo
-   echo "Syntax: sld first second"
+   echo "Syntax: newdevdirs first second"
    echo "options:"
    echo "first     Project/binary target name"
    echo "second     Include file"
@@ -41,7 +41,7 @@ if [ $# -eq 1 ]; then
 fi
 
 
-echo Creating Directories for $1 Project with Include file $2
+
 
 NOW=$(date +"%d-%m-%Y")
 
@@ -59,6 +59,8 @@ touch ./$1/src/main.c
 touch ./$1/src/$2.c
 touch ./$1/inc/$2.h
 
+echo Writing boilerplate code
+
 #write to main.c
 echo "
 /*
@@ -72,6 +74,11 @@ echo "
 
 
 #include \"../inc/$2.h\"
+
+int main (void)
+{
+	return 0;
+}
 
 " >>./$1/src/main.c
 
@@ -89,10 +96,7 @@ echo "
 
 #include \"../inc/$2.h\"
 
-int main (void)
-{
-	return 0;
-}
+
 
 " >>./$1/src/$2.c
 
